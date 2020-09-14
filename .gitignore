@@ -1,2 +1,6 @@
 # Ignore output files
 bin/
+build/
+
+#IDE folders
+.vscode/
