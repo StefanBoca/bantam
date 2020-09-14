@@ -6,7 +6,7 @@ class PrefixOperatorParselet : public PrefixParselet {
 public:
 	PrefixOperatorParselet(int precedence) { mPrecedence = precedence; }
 
-	virtual Expression& parse(Parser& parser, Token& token) override;
+	virtual ExpressionSP parse(ParserSP parser, Token& token) override;
 
 	virtual int getPrecedence() { return mPrecedence; }
 

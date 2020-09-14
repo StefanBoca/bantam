@@ -1,18 +1,18 @@
 #include "Parser.h"
 
-Parser::Parser(Lexer& tokens) :
-	mRead(std::vector<Token>()), mPrefixParselets(std::map<TokenType, PrefixParselet*>()),
-	mInfixParselets(std::map<TokenType, InfixParselet*>()), mTokens(tokens) {}
+Parser::Parser(LexerSP tokens) :
+	mRead(std::vector<Token>()), mPrefixParselets(std::map<TokenType, PrefixParseletSP>()),
+	mInfixParselets(std::map<TokenType, InfixParseletSP>()), mTokens(tokens) {}
 
-void Parser::registerParselet(TokenType token, PrefixParselet& parselet) { mPrefixParselets[token] = &parselet; }
+void Parser::registerParselet(TokenType token, PrefixParseletSP parselet) { mPrefixParselets[token] = parselet; }
 
-void Parser::registerParselet(TokenType token, InfixParselet& parselet) { mInfixParselets[token] = &parselet; }
+void Parser::registerParselet(TokenType token, InfixParseletSP parselet) { mInfixParselets[token] = parselet; }
 
-Expression& Parser::parseExpression() { return parseExpression(0); }
+ExpressionSP Parser::parseExpression() { return parseExpression(0); }
 
-Expression& Parser::parseExpression(int precedence) {
+ExpressionSP Parser::parseExpression(int precedence) {
 	Token token = consume();
-	PrefixParselet* prefix;
+	PrefixParseletSP prefix;
 	if (mPrefixParselets.contains(token.getType())) {
 		prefix = mPrefixParselets[token.getType()];
 	} else {
@@ -22,13 +22,13 @@ Expression& Parser::parseExpression(int precedence) {
 	// 	prefix = mPrefixParselets.at(token.getType());
 	// } catch (std::out_of_range& e) { throw ParseException("Could not parse \"" + token.getText() + "\"."); }
 
-	Expression& left = prefix->parse(*this, token);
+	ExpressionSP left = prefix->parse(shared_from_this(), token);
 
 	while (precedence < getPrecedence()) {
 		token = consume();
 
-		InfixParselet* infix = mInfixParselets[token.getType()];
-		left = infix->parse(*this, left, token);
+		InfixParseletSP infix = mInfixParselets[token.getType()];
+		left = infix->parse(shared_from_this(), left, token);
 	}
 
 	return left;
@@ -62,7 +62,7 @@ Token Parser::consume() {
 
 Token Parser::lookAhead(int distance) {
 	// Read in as many as needed.
-	while (distance >= mRead.size()) { mRead.push_back(mTokens.next()); }
+	while (distance >= mRead.size()) { mRead.push_back(mTokens->next()); }
 
 	// Get the queued token.
 	return mRead[distance];
@@ -71,7 +71,7 @@ Token Parser::lookAhead(int distance) {
 int Parser::getPrecedence() {
 	TokenType t = lookAhead(0).getType();
 	if (mInfixParselets.contains(t)) { return mInfixParselets[t]->getPrecedence(); }
-	// InfixParselet* parser = mInfixParselets[lookAhead(0).getType()];
+	// InfixParseletSP parser = mInfixParselets[lookAhead(0).getType()];
 	// if (parser != nullptr) {return parser->getPrecedence();}
 
 	return 0;

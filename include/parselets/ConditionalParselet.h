@@ -8,7 +8,7 @@ class ConditionalParselet : public InfixParselet {
 public:
 	ConditionalParselet() = default;
 
-	virtual Expression& parse(Parser& parser, Expression& left, Token& token) override;
+	virtual ExpressionSP parse(ParserSP parser, ExpressionSP left, Token& token) override;
 
 	virtual int getPrecedence() { return Precedence::CONDITIONAL; }
 };

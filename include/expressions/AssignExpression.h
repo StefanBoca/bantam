@@ -4,11 +4,15 @@
 
 class AssignExpression : public Expression {
 public:
-	AssignExpression(std::string& name, Expression& right) : mName(name), mRight(right) {}
+	AssignExpression(std::string name, ExpressionSP right) : mName(name), mRight(right) {}
 
-	virtual std::string toString() override { return std::string("(" + mName + " = " + mRight.toString() + ")"); }
+	virtual void print(std::ostream& out) const override {
+		out << "(" << mName << " = ";
+		out << *mRight;
+		out << ")";
+	}
 
 private:
-	std::string& mName;
-	Expression& mRight;
+	std::string mName;
+	ExpressionSP mRight;
 };

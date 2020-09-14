@@ -30,7 +30,7 @@ Token Lexer::next() {
 				mIndex++;
 			}
 
-			std::string name = mText.substr(start, mIndex);
+			std::string name = mText.substr(start, mIndex - start);
 			return Token(TokenType::NAME, name);
 		} else {
 			// Ignore all other characters (whitespace, etc.)

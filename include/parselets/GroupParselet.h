@@ -8,5 +8,5 @@ class GroupParselet : public PrefixParselet {
 public:
 	GroupParselet() = default;
 
-	virtual Expression& parse(Parser& parser, Token& token) override;
+	virtual ExpressionSP parse(ParserSP parser, Token& token) override;
 };

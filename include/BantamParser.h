@@ -7,7 +7,7 @@
 
 class BantamParser : public Parser {
 public:
-	BantamParser(Lexer lexer);
+	BantamParser(LexerSP lexer);
 
 	void postfix(TokenType token, int precedence);
 	void prefix(TokenType token, int precedence);

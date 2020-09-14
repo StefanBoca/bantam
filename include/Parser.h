@@ -10,20 +10,24 @@
 
 #include <vector>
 #include <map>
+#include <memory>
 
 class PrefixParselet;
 class InfixParselet;
 
-class Parser {
+typedef std::shared_ptr<PrefixParselet> PrefixParseletSP;
+typedef std::shared_ptr<InfixParselet> InfixParseletSP;
+
+class Parser : public std::enable_shared_from_this<Parser> {
 public:
 	Parser() = delete;
-	Parser(Lexer& tokens);
+	Parser(LexerSP tokens);
 
-	void registerParselet(TokenType token, PrefixParselet& parselet);
-	void registerParselet(TokenType token, InfixParselet& parselet);
+	void registerParselet(TokenType token, PrefixParseletSP parselet);
+	void registerParselet(TokenType token, InfixParseletSP parselet);
 
-	Expression& parseExpression(int precedence);
-	Expression& parseExpression();
+	ExpressionSP parseExpression(int precedence);
+	ExpressionSP parseExpression();
 
 	bool match(TokenType expected);
 	Token consume(TokenType expected);
@@ -33,8 +37,10 @@ private:
 	Token lookAhead(int distance);
 	int getPrecedence();
 
-	Lexer& mTokens;
+	LexerSP mTokens;
 	std::vector<Token> mRead;
-	std::map<TokenType, PrefixParselet*> mPrefixParselets;
-	std::map<TokenType, InfixParselet*> mInfixParselets;
+	std::map<TokenType, PrefixParseletSP> mPrefixParselets;
+	std::map<TokenType, InfixParseletSP> mInfixParselets;
 };
+
+typedef std::shared_ptr<Parser> ParserSP;

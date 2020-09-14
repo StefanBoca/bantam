@@ -2,18 +2,12 @@
 
 #include "Parselets.h"
 
-BantamParser::BantamParser(Lexer lexer) : Parser(lexer) {
-	// registerParselet the ones that need special parselets.
-	PrefixParselet* nameParselet = dynamic_cast<PrefixParselet*>(new NameParselet());
-	InfixParselet* assignParselet = dynamic_cast<InfixParselet*>(new AssignParselet());
-	InfixParselet* conditionalParselet = dynamic_cast<InfixParselet*>(new ConditionalParselet());
-	PrefixParselet* groupParselet = dynamic_cast<PrefixParselet*>(new GroupParselet());
-	InfixParselet* callParselet = dynamic_cast<InfixParselet*>(new CallParselet());
-	registerParselet(TokenType::NAME, *nameParselet);
-	registerParselet(TokenType::ASSIGN, *assignParselet);
-	registerParselet(TokenType::QUESTION, *conditionalParselet);
-	registerParselet(TokenType::LEFT_PAREN, *groupParselet);
-	registerParselet(TokenType::LEFT_PAREN, *callParselet);
+BantamParser::BantamParser(LexerSP lexer) : Parser(lexer) {
+	registerParselet(TokenType::NAME, std::make_shared<NameParselet>());
+	registerParselet(TokenType::ASSIGN, std::make_shared<AssignParselet>());
+	registerParselet(TokenType::QUESTION, std::make_shared<ConditionalParselet>());
+	registerParselet(TokenType::LEFT_PAREN, std::make_shared<GroupParselet>());
+	registerParselet(TokenType::LEFT_PAREN, std::make_shared<CallParselet>());
 
 	// registerParselet the simple operator parselets.
 	prefix(TokenType::PLUS, Precedence::PREFIX);
@@ -32,21 +26,17 @@ BantamParser::BantamParser(Lexer lexer) : Parser(lexer) {
 }
 
 void BantamParser::postfix(TokenType token, int precedence) {
-	InfixParselet* postfixOperatorParselet = dynamic_cast<InfixParselet*>(new PostfixOperatorParselet(precedence));
-	registerParselet(token, *postfixOperatorParselet);
+	registerParselet(token, std::make_shared<PostfixOperatorParselet>(precedence));
 }
 
 void BantamParser::prefix(TokenType token, int precedence) {
-	PrefixParselet* prefixOperatorParselet = dynamic_cast<PrefixParselet*>(new PrefixOperatorParselet(precedence));
-	registerParselet(token, *prefixOperatorParselet);
+	registerParselet(token, std::make_shared<PrefixOperatorParselet>(precedence));
 }
 
 void BantamParser::infixLeft(TokenType token, int precedence) {
-	InfixParselet* binaryOperatorParselet = dynamic_cast<InfixParselet*>(new BinaryOperatorParselet(precedence, false));
-	registerParselet(token, *binaryOperatorParselet);
+	registerParselet(token, std::make_shared<BinaryOperatorParselet>(precedence, false));
 }
 
 void BantamParser::infixRight(TokenType token, int precedence) {
-	InfixParselet* binaryOperatorParselet = dynamic_cast<InfixParselet*>(new BinaryOperatorParselet(precedence, true));
-	registerParselet(token, *binaryOperatorParselet);
+	registerParselet(token, std::make_shared<BinaryOperatorParselet>(precedence, true));
 }

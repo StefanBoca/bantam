@@ -6,8 +6,8 @@ class NameParselet : public PrefixParselet {
 public:
 	NameParselet() = default;
 
-	virtual Expression& parse(Parser& parser, Token& token) override {
+	virtual ExpressionSP parse(ParserSP parser, Token& token) override {
 		std::string& text = token.getText();
-		return *new NameExpression(text);
+		return std::make_shared<NameExpression>(text);
 	}
 };

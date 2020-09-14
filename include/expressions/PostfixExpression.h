@@ -5,11 +5,11 @@
 
 class PostfixExpression : public Expression {
 public:
-	PostfixExpression(Expression& left, TokenType op) : mLeft(left), mOperator(op) {}
+	PostfixExpression(ExpressionSP left, TokenType op) : mLeft(left), mOperator(op) {}
 
-	virtual std::string toString() { return std::string("(" + mLeft.toString() + std::string(1, punctuator(mOperator)) + ")"); }
+	virtual void print(std::ostream& out) const override { out << "(" << *mLeft << punctuator(mOperator) << ")"; }
 
 private:
-	Expression& mLeft;
+	ExpressionSP mLeft;
 	TokenType mOperator;
 };

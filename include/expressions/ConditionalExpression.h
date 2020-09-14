@@ -4,16 +4,15 @@
 
 class ConditionalExpression : public Expression {
 public:
-	ConditionalExpression(Expression& condition, Expression& thenArm, Expression& elseArm) :
+	ConditionalExpression(ExpressionSP condition, ExpressionSP thenArm, ExpressionSP elseArm) :
 		mCondition(condition), mThenArm(thenArm), mElseArm(elseArm) {}
 
-	virtual std::string toString() {
-		return std::string(
-			"(" + mCondition.toString() + " ? " + mThenArm.toString() + " : " + mElseArm.toString() + ")");
+	virtual void print(std::ostream& out) const override {
+		out << "(" << *mCondition << " ? " << *mThenArm << " : " << *mElseArm << ")";
 	}
 
 private:
-	Expression& mCondition;
-	Expression& mThenArm;
-	Expression& mElseArm;
+	ExpressionSP mCondition;
+	ExpressionSP mThenArm;
+	ExpressionSP mElseArm;
 };

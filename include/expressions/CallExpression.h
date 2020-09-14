@@ -6,20 +6,18 @@
 
 class CallExpression : public Expression {
 public:
-	CallExpression(Expression& function, std::vector<Expression*>& args) : mFunction(function), mArgs(args) {}
+	CallExpression(ExpressionSP function, std::vector<ExpressionSP> args) : mFunction(function), mArgs(args) {}
 
-	virtual std::string toString() override {
-		std::string str = mFunction.toString();
-		str += "(";
+	virtual void print(std::ostream& out) const override {
+		out << *mFunction << "(";
 		for (int i = 0; i < mArgs.size(); i++) {
-			str += mArgs[i]->toString();
-			if (i < mArgs.size() - 1) { str += ", "; }
+			out << *(mArgs.at(i));
+			if (i < mArgs.size() - 1) { out << ", "; }
 		}
-		str += ")";
-		return str;
+		out << ")";
 	}
 
 private:
-	Expression& mFunction;
-	std::vector<Expression*>& mArgs;
+	ExpressionSP mFunction;
+	std::vector<ExpressionSP> mArgs;
 };

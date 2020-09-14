@@ -5,13 +5,13 @@
 
 class PrefixExpression : public Expression {
 public:
-	PrefixExpression(TokenType op, Expression& right) : mOperator(op), mRight(right) {}
+	PrefixExpression(TokenType op, ExpressionSP right) : mOperator(op), mRight(right) {}
 
-	virtual std::string toString() {
-		return std::string("(" + std::string(1, punctuator(mOperator)) + mRight.toString() + ")");
-	}
+    virtual void print(std::ostream& out) const override {
+        out << "(" << punctuator(mOperator) << *mRight << ")";
+    }
 
 private:
 	TokenType mOperator;
-	Expression& mRight;
+	ExpressionSP mRight;
 };

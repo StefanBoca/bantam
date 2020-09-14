@@ -5,15 +5,15 @@
 
 class OperatorExpression : public Expression {
 public:
-	OperatorExpression(Expression& left, TokenType op, Expression& right) : mLeft(left), mOperator(op), mRight(right) {}
+	OperatorExpression(ExpressionSP left, TokenType op, ExpressionSP right) :
+		mLeft(left), mOperator(op), mRight(right) {}
 
-	virtual std::string toString() {
-		return std::string(
-			"(" + mLeft.toString() + " " + std::string(1, punctuator(mOperator)) + " " + mRight.toString() + ")");
+	virtual void print(std::ostream& out) const override {
+		out << "(" << *mLeft << " " << punctuator(mOperator) << " " << *mRight << ")";
 	}
 
 private:
-	Expression& mLeft;
+	ExpressionSP mLeft;
 	TokenType mOperator;
-	Expression& mRight;
+	ExpressionSP mRight;
 };

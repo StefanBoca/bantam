@@ -10,7 +10,7 @@ class CallParselet : public InfixParselet {
 public:
 	CallParselet() = default;
 
-	virtual Expression& parse(Parser& parser, Expression& left, Token& token) override;
+	virtual ExpressionSP parse(ParserSP parser, ExpressionSP left, Token& token) override;
 
 	virtual int getPrecedence() { return Precedence::CALL; }
 };

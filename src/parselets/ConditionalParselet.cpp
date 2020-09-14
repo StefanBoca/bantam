@@ -2,10 +2,10 @@
 
 #include "TokenType.h"
 
-Expression& ConditionalParselet::parse(Parser& parser, Expression& left, Token& token) {
-	Expression& thenArm = parser.parseExpression();
-	parser.consume(TokenType::COLON);
-	Expression& elseArm = parser.parseExpression(Precedence::CONDITIONAL - 1);
+ExpressionSP ConditionalParselet::parse(ParserSP parser, ExpressionSP left, Token& token) {
+	ExpressionSP thenArm = parser->parseExpression();
+	parser->consume(TokenType::COLON);
+	ExpressionSP elseArm = parser->parseExpression(Precedence::CONDITIONAL - 1);
 
-	return *new ConditionalExpression(left, thenArm, elseArm);
+	return std::make_shared<ConditionalExpression>(left, thenArm, elseArm);
 }

@@ -5,6 +5,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 class Lexer {
 public:
@@ -17,3 +18,5 @@ private:
 	std::string mText;
 	int mIndex = 0;
 };
+
+typedef std::shared_ptr<Lexer> LexerSP;

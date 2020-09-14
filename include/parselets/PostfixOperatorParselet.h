@@ -6,8 +6,8 @@ class PostfixOperatorParselet : public InfixParselet {
 public:
 	PostfixOperatorParselet(int precedence) { mPrecedence = precedence; }
 
-	virtual Expression& parse(Parser& parser, Expression& left, Token& token) override {
-		return *new PostfixExpression(left, token.getType());
+	virtual ExpressionSP parse(ParserSP parser, ExpressionSP left, Token& token) override {
+		return std::make_shared<PostfixExpression>(left, token.getType());
 	}
 
 	virtual int getPrecedence() { return mPrecedence; }
